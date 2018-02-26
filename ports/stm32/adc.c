@@ -174,6 +174,7 @@ STATIC void adcx_clock_enable(void) {
 
 STATIC void adc_init_single(pyb_obj_adc_t *adc_obj) {
     if (!is_adcx_channel(adc_obj->channel)) {
+
         return;
     }
 
@@ -295,12 +296,15 @@ STATIC mp_obj_t adc_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_
         channel = adc_get_internal_channel(mp_obj_get_int(pin_obj));
     } else {
         const pin_obj_t *pin = pin_find(pin_obj);
+
+
         if ((pin->adc_num & PIN_ADC1) == 0) {
             // No ADC1 function on that pin
-            nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "pin %q does not have ADC capabilities", pin->name));
+            nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "pin %q does not have ADC capabilities (adc_nr=%d adc_channel=%d port=%d pin=%d)", pin->name, pin->adc_num, pin->adc_channel, pin->port, pin->pin));
         }
         channel = pin->adc_channel;
     }
+
 
     if (!is_adcx_channel(channel)) {
         nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "not a valid ADC Channel: %d", channel));
@@ -471,6 +475,10 @@ typedef struct _pyb_adc_all_obj_t {
 
 void adc_init_all(pyb_adc_all_obj_t *adc_all, uint32_t resolution, uint32_t en_mask) {
 
+
+	 nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "adc_init_all error"));
+
+
     switch (resolution) {
         case 6:  resolution = ADC_RESOLUTION_6B;  break;
         case 8:  resolution = ADC_RESOLUTION_8B;  break;
@@ -617,6 +625,7 @@ STATIC mp_obj_t adc_all_make_new(const mp_obj_type_t *type, size_t n_args, size_
     if (n_args > 1) {
         en_mask =  mp_obj_get_int(args[1]);
     }
+
     adc_init_all(o, res, en_mask);
 
     return o;

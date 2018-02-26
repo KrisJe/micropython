@@ -1,9 +1,12 @@
 # Select the board to build for: if not given on the command line,
 # then default to PYBV10.
-BOARD ?= PYBV10
+BOARD ?= NUCLEO_F767ZI
 ifeq ($(wildcard boards/$(BOARD)/.),)
 $(error Invalid BOARD specified)
 endif
+
+print-%: ; @$(error $* is $($*) ($(value $*)) \
+	(from $(origin $*)))
 
 # If the build directory is not given, make it reflect the board name.
 BUILD ?= build-$(BOARD)
@@ -38,7 +41,8 @@ STFLASH ?= st-flash
 OPENOCD ?= openocd
 OPENOCD_CONFIG ?= boards/openocd_stm32f4.cfg
 
-CROSS_COMPILE = arm-none-eabi-
+CROSS_COMPILE = arm-atollic-eabi-
+#CROSS_COMPILE = arm-none-eabi-
 
 INC += -I.
 INC += -I$(TOP)

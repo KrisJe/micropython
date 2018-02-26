@@ -259,6 +259,8 @@ ifneq ($(FROZEN_MPY_DIR),)
 PY_O += $(BUILD)/$(BUILD)/frozen_mpy.o
 endif
 
+
+
 # Sources that may contain qstrings
 SRC_QSTR_IGNORE = nlr% emitnx86% emitnx64% emitnthumb% emitnarm% emitnxtensa%
 SRC_QSTR = $(SRC_MOD) $(addprefix py/,$(filter-out $(SRC_QSTR_IGNORE),$(PY_O_BASENAME:.o=.c)) emitnative.c)
@@ -266,6 +268,7 @@ SRC_QSTR = $(SRC_MOD) $(addprefix py/,$(filter-out $(SRC_QSTR_IGNORE),$(PY_O_BAS
 # Anything that depends on FORCE will be considered out-of-date
 FORCE:
 .PHONY: FORCE
+
 
 $(HEADER_BUILD)/mpversion.h: FORCE | $(HEADER_BUILD)
 	$(Q)$(PYTHON) $(PY_SRC)/makeversionhdr.py $@
